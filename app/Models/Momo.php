@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Momo extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'phone',
+        'password',
+        'min',
+        'max',
+        'info',
+        'times',
+        'amount',
+        'status'
+    ];
 }

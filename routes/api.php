@@ -20,4 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/settings', [App\Http\Controllers\DUNGA::class, 'settings']);
 Route::post('/momo', [App\Http\Controllers\DUNGA::class, 'momo']);
+Route::post('/history', [App\Http\Controllers\DUNGA::class, 'history']);
 Route::post('/render_minigame', [App\Http\Controllers\DUNGA::class, 'minigame']);
+Route::post('/balance-hu', [App\Http\Controllers\DUNGA::class, 'hu']);
+Route::post('/check-day-mission', [App\Http\Controllers\DUNGA::class, 'checkDayMission']);

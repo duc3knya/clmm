@@ -65,30 +65,30 @@
     }
 
     .panel-heading {
-            background-color: #055FB3 !important;
-            border-color: #055FB3 !important;
+            background-color: {{ $setting->color }} !important;
+            border-color: {{ $setting->color }} !important;
         }
 
         .panel-primary {
-            /*background-color: #055FB3 !important;*/
-            border-color: #055FB3 !important;
+            /*background-color: {{ $setting->color }} !important;*/
+            border-color: {{ $setting->color }} !important;
         }
 
         .navbar {
-            background-color: #055FB3 !important;
+            background-color: {{ $setting->color }} !important;
 
         }
 
         .navbar .navbar-collapse {
-            background-color: #055FB3 !important;
+            background-color: {{ $setting->color }} !important;
         }
 
         .table .bg-primary {
-            background-color: #055FB3 !important;
+            background-color: {{ $setting->color }} !important;
         }
 
         .footer {
-            background-color: #055FB3 !important;
+            background-color: {{ $setting->color }} !important;
         }
 
         .mainbar {
@@ -343,7 +343,7 @@ Trạng thái
 <div class="container text-center">
 <div class="row">
 <div class="col-xs-12 text-white ">
-Copyright 2021 © trummomo.me | All rights reserved | AAAAAA
+Copyright 2021 © {{ $setting->name }} | All rights reserved | DDDD
 </div>
 </div>
 </div>

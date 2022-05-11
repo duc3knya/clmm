@@ -16,7 +16,7 @@ class CreateMomosTable extends Migration
         Schema::create('momos', function (Blueprint $table) {
             $table->id();
             $table->string('phone');
-            $table->string('token');
+            $table->longText('info');
             $table->string('password');
             $table->string('min');
             $table->string('max');

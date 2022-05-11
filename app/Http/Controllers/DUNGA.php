@@ -6,48 +6,136 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 use App\Http\Resources\MomoResource;
+use App\Http\Resources\HistoryResource;
 use App\Models\Momo;
+use App\Models\Setting;
+use App\Models\HistoryPlay;
+use App\Models\HistoryDayMission;
+use Carbon\Carbon;
 
 class DUNGA extends Controller
 {
-    public function settings() {
+    public function settings()
+    {
+
+        $setting = Setting::first();
+
         return response()->json(array(
             'status'    => true,
             'message'   => 'Thành công',
             'contacts'  => ContactResource::collection(Contact::where('status', 1)->get()),
-            'note'      => '<p style="margin-right: 0px; margin-bottom: 3px; margin-left: 0px; background-color: rgb(247, 247, 247);"><span style="font-weight: 600; background-color: rgb(255, 255, 255);"><span style="font-size: 15px;"><font color="#ff0000">HỆ THỐNG CHẲN LẺ TÀI XỈU UY TÍN AUTO THANH TOÁN TỰ ĐỘNG</font></span></span></p><p style="margin-right: 0px; margin-bottom: 3px; margin-left: 0px; background-color: rgb(247, 247, 247);"><span style="font-weight: 600; background-color: rgb(255, 255, 255);"><span style="font-size: 15px;"><font color="#ff0000"><br></font></span></span></p><p style="margin-right: 0px; margin-bottom: 3px; margin-left: 0px; background-color: rgb(247, 247, 247);"><span style="font-weight: 600; background-color: rgb(255, 255, 255);"><span style="font-size: 15px;"><font color="#ff0000"><br></font></span></span></p><h5 style="font-family: Tahoma; line-height: 1.1; color: rgb(51, 51, 51); margin-bottom: 10px; font-size: 14px; text-align: center; text-size-adjust: 100%;"><p style="margin-right: 0px; margin-bottom: 3px; margin-left: 0px; font-family: Tahoma, Verdana, Helvetica, sans-serif; caret-color: rgb(51, 51, 51); text-size-adjust: 100%; text-align: justify;"><span style="color: rgb(255, 0, 0); font-weight: bold;">ĐỌC THÔNG BÁO TRÁNH MẤT TIỀN : (MỚI)</span><br></p><p style="margin-right: 0px; margin-bottom: 3px; margin-left: 0px; font-family: Tahoma, Verdana, Helvetica, sans-serif; caret-color: rgb(51, 51, 51); text-size-adjust: 100%; text-align: justify;"><font style="text-align: left; -webkit-tap-highlight-color: transparent; font-weight: bold;">-</font><font style="text-align: left; -webkit-tap-highlight-color: transparent; font-weight: bold;"> </font><font color="#000000" style="text-align: left; -webkit-tap-highlight-color: transparent; font-weight: bold;">CHÚ Ý</font><font style="text-align: left; -webkit-tap-highlight-color: transparent; font-weight: bold;">: </font><font color="#000000" style="text-align: left; -webkit-tap-highlight-color: transparent;"><span style="font-weight: 600;">KHÔNG NÊN MÃI CHƠI 1 SỐ VÌ SỐ THAY ĐỔI LIÊN TỤC , NÊN TẢI LẠI TRANG SAU 10-20P VÀ LẤY SỐ HẠN MỨC THẤP CHƠI TIẾP . NẾU SỐ TRÊN WED ĐÃ TẮT VUI LÒNG KHÔNG CHƠI , KHI CHƠI TRÁNH KHÔNG TRẢ ĐƠN </span></font></p><p style="margin-right: 0px; margin-bottom: 3px; margin-left: 0px; font-family: Tahoma, Verdana, Helvetica, sans-serif; caret-color: rgb(51, 51, 51); text-size-adjust: 100%; text-align: justify;"><br></p><p style="margin-right: 0px; margin-bottom: 3px; margin-left: 0px; font-family: Tahoma, Verdana, Helvetica, sans-serif; caret-color: rgb(51, 51, 51); text-size-adjust: 100%; text-align: justify;"><span style="font-weight: bold;"><font color="#ff0000">- <span style="background-color: rgb(255, 255, 0);">Lỗi phải báo ngay trong 6 tiếng , tránh mất giao dịch sẽ không xữ lý được</span></font></span></p></h5><p style="margin-right: 0px; margin-bottom: 3px; margin-left: 0px;"><br style="color: rgb(51, 51, 51); font-family: Tahoma, Verdana, Helvetica, sans-serif; font-size: 14px;"></p>',
-            'ads'       => '',
-            'active'    => 1,
-            'history'   => 1,
-            'only_win'  => 1,
-            'limit'     => 10,
-            'week_top'  => 1,
-            'day_mission'  => array(
-                'active'    => 1,
-            )
+            'note'      => $setting->note,
+            'ads'       => $setting->ads,
+            'active'    => $setting->active,
+            'history'   => $setting->history,
+            'only_win'  => $setting->only_win,
+            'limit'     => $setting->limit,
+            'week_top'  => $setting->week_top,
+            'day_mission' => $setting->day_mission,
+            'hu' => array(
+                'active' => $setting->hu,
+                'roles' => array(
+                    '111'
+                ),
+                'amount' => 10000
+            ),
         ));
     }
 
-    public function momo() {
+    public function momo()
+    {
+        $setting = Setting::first();
+        $momo = Momo::where('status', '!=', 3)->get();
         return response()->json(array(
             'status'    => true,
             'message'   => 'Thành công',
             'data_momo' => MomoResource::collection(Momo::where('status', 1)->get()),
             'game'      => array(
                 'active' => array('chanle2', 'chanle', 'taixiu2', 'taixiu', 'x3', 'hieu2so', 'lo', 'gap3'),
-                'html'   => view('game')->render()
+                'html'   => view('game', compact('momo', 'setting'))->render()
             )
         ));
     }
 
-    public function minigame(Request $request) {
+    public function minigame(Request $request)
+    {
+        $setting = Setting::first();
         if ($request->game == 'day_mission') {
-            $game = view('dayMission')->render();
+            $total = HistoryDayMission::sum('receive');
+            $dayLevel = explode('|', $setting->level_day);
+            $receiveLevel = explode('|', $setting->gift_day);
+            $gift = array();
+            for ($i = 0; $i < count($receiveLevel); $i++) {
+                $json = array(
+                    'level' => $dayLevel[$i],
+                    'gift' => $receiveLevel[$i]
+                );
+                array_push($gift, $json);
+            }
+            $day_mission = array(
+                'data' => $gift
+            );
+            $game = view('dayMission', compact('day_mission', 'setting', 'total'))->render();
         }
         return response()->json(array(
+            'status'  => true,
             'message' => 'Thành công',
             'html'    => $game,
-            'game'    => $request->game  
+            'game'    => $request->game
         ));
     }
+
+    public function history()
+    {
+        $setting = Setting::first();
+        return response()->json(array(
+            'status'    => true,
+            'message'   => 'Thành công',
+            'history'      => array(
+                'status'    => true,
+                'message'   => 'SUCCESS',
+                'data'      => HistoryResource::collection(HistoryPlay::limit($setting->limit)->get()),
+            )
+        ));
+    }
+
+    public function hu()
+    {
+        return response()->json(array(
+            'status'    => true,
+            'message'   => 'Thành công',
+            'amount'   => 11111
+        ));
+    }
+
+    public function checkDayMission(Request $request)
+    {
+        $setting = Setting::first();
+        $phone = HistoryPlay::whereDate('created_at', Carbon::today())->where('partnerId', $request->phone)->count();
+        $amount = HistoryPlay::whereDate('created_at', Carbon::today())->where('partnerId', $request->phone)->sum('amount');
+        $turn = HistoryDayMission::whereDate('created_at', Carbon::today())->where('phone', $request->phone)->count();
+        if ($phone <= 0) {
+            return response()->json(array('status' => false, 'message' => 'Oh !! Số điện thoại này chưa chơi game nào, hãy kiểm tra lại'));
+        } else {
+            $dayLevel = explode('|', $setting->level_day);
+            $receiveLevel = explode('|', $setting->gift_day);
+            for ($i = 0; $i < count($receiveLevel); $i++) {
+                if ($turn < count($receiveLevel) && $amount >= $dayLevel[$i] && $amount >= $dayLevel[$turn]) {
+                    HistoryDayMission::create([
+                        'phone'    => $request->phone,
+                        'amount'   => $amount,
+                        'level'    => $dayLevel[$i],
+                        'receive'  => $receiveLevel[$i],
+                        'status'   => 1,
+                        'pay'      => 0
+                    ]);
+                } else if ($amount < (int)$dayLevel[$i]) {
+                    return response()->json(array('status' => false, 'message' => 'Bạn cần chơi '.number_format($dayLevel[$i] - $amount).' nữa !'));
+                } 
+            }
+            return response()->json(array('status' => true, 'html' => 'Thành công vui lòng đợi xử lý'));
+        }
+    }
+
+    
 }

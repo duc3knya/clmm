@@ -60,7 +60,7 @@ let DUNGA = function() {
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
-        alert('ÄĂ£ sao chĂ©p sá»‘ Ä‘iá»‡n thoáº¡i nĂ y. ChĂºc báº¡n may máº¯n.');
+        alert('Đã sao chép số điện thoại này. Chúc bạn may mắn.');
     }
     number_format = (number) => {
         return parseInt(number).toLocaleString('it-IT', {
@@ -107,7 +107,7 @@ let DUNGA = function() {
                             table_one += `<tr>`;
                             table_one += `<td>${momo.username} <span class="label label-success text-uppercase" onclick="DUNGA.coppy('${momo.username}')"><i class="fa fa-clipboard" aria-hidden="true"></i></span> <span class="label label-success text-uppercase" onclick="DUNGA.play('${momo.username}')"><i class="fa fa-play" aria-hidden="true"></i></span></td>`;
                             table_one += `<td>${status_momo[momo.status]}</td>`;
-                            table_one += `<td><strong><span class="text-danger">${settings.transfers_today.times}</span> Láº§n</strong></td>`;
+                            table_one += `<td><strong><span class="text-danger">${settings.transfers_today.times}</span> lần</strong></td>`;
                             table_one += `<td><strong><span class="text-danger cash-format">${number_format(settings.transfers_today.amount)}</span> / 50.000.000 VND</strong></td>`;
                             table_one += "</tr>";
 
@@ -173,7 +173,7 @@ let DUNGA = function() {
                             loadWeekTop();
                             $(".week_top").removeClass("hidden");
                         }
-                        if (data.day_mission !== undefined && data.day_mission.active == 1) {
+                        if (data.day_mission !== undefined && data.day_mission == 1) {
                             loadMinigame({
                                 game: "day_mission",
                             });
@@ -216,7 +216,7 @@ let DUNGA = function() {
                     if (data.history.status == true) {
 
                         let status_win = {
-                            1: '<span class="label label-success text-uppercase">Tháº¯ng</span>',
+                            1: '<span class="label label-success text-uppercase">Thắng</span>',
                             "-1": '<span class="label label-secondary text-uppercase">Thua</span>'
                         }
                         let html_history = "";
@@ -224,15 +224,15 @@ let DUNGA = function() {
                             let color_change = '#' + ((1 << 24) * (Math.random() + 1) | 0).toString(16)
                                 .substr(1);
                             html_history += "<tr>";
-                            if (time_tran == "1" && history.time_tran_date !== "") {
-                                html_history += `<td>${history.time_tran_date}</td>`;
-                            }
+                            // if (time_tran == "1" && history.time_tran_date !== "") {
+                            //     html_history += `<td>${history.time_tran_date}</td>`;
+                            // }
                             html_history += `<td>${history.partnerId}</td>`;
                             html_history += `<td>${number_format(history.amount)}</td>`;
                             html_history += `<td><span class="fa-stack"><span class="fa fa-circle fa-stack-2x" style="color:${color_change}"></span><span class="fa-stack-1x text-white">${history.comment}</span></span></td>`;
                             html_history += `<td>${status_win[history.victory]}</td>`;
                             html_history += "</tr>";
-                            if (history.amount > 50000 && noti_wined[history.id] == undefined) {
+                            if (history.amount >= 50000 && noti_wined[history.id] == undefined) {
                                 noti_win[history.id] = {
                                     game: "",
                                     partnerId: history.partnerId,
@@ -311,9 +311,11 @@ let DUNGA = function() {
         initAjax({
             url: initUrl({
                 type: "check-day-mission",
-                partnerId
             }),
             method: "POST",
+            data: {
+                phone: partnerId,
+            },
             beforeSend: function() {
                 $(".check-day-mission").attr("disabled", true).addClass("disabled");
                 $("#day_mission_querying").show();
@@ -552,8 +554,8 @@ let DUNGA = function() {
             } = data;
             new Notify({
                 status: 'success',
-                title: 'TrĂ² chÆ¡i: ' + game,
-                text: `ChĂºc má»«ng <b>${partnerId}</b> vá»«a tháº¯ng ${number_format(amount)}`,
+                title: 'Trò chơi: ' + game,
+                text: `Chúc mừng <b>${partnerId}</b> đã thắng ${number_format(amount)}`,
                 autoclose: true,
                 customIcon: '<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" width="512" height="512"><path d="M19,9H14a5.006,5.006,0,0,0-5,5v5a5.006,5.006,0,0,0,5,5h5a5.006,5.006,0,0,0,5-5V14A5.006,5.006,0,0,0,19,9Zm-5,6a1,1,0,1,1,1-1A1,1,0,0,1,14,15Zm5,5a1,1,0,1,1,1-1A1,1,0,0,1,19,20ZM15.6,5,12.069,1.462A5.006,5.006,0,0,0,5,1.462L1.462,5a5.006,5.006,0,0,0,0,7.071L5,15.6a4.961,4.961,0,0,0,2,1.223V14a7.008,7.008,0,0,1,7-7h2.827A4.961,4.961,0,0,0,15.6,5ZM5,10A1,1,0,1,1,6,9,1,1,0,0,1,5,10ZM9,6a1,1,0,1,1,1-1A1,1,0,0,1,9,6Z"></path></svg>',
             })
@@ -928,6 +930,6 @@ $("#result_hu [name=partnerId]").on("input", function() {
     if (this.value.length >= 10 && this.value.length <= 11) {
         $("#msg_hu2").html('<button type="text" class="btn btn-success submit-join-hu" onclick="DUNGA.joinhu()">Tham gia</button>');
     } else {
-        $("#msg_hu2").html("Vui lĂ²ng nháº­p sá»‘ Ä‘iá»‡n thoáº¡i Ä‘á»ƒ tiáº¿p tá»¥c");
+        $("#msg_hu2").html("Vui lòng nhập số điện thoại để tiếp tục");
     }
 });

@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\HistoryPlay;
+use Carbon\Carbon;
 
 class MomoResource extends JsonResource
 {
@@ -20,7 +22,7 @@ class MomoResource extends JsonResource
             'settings' => array(
                 'transfers_today' => array(
                     'times' => $this->times,
-                    'amount' => $this->amount
+                    'amount' => $this->amount,
                 )
             )
         ];
